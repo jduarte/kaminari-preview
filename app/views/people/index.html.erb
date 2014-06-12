@@ -1,0 +1,55 @@
+<%= link_to 'New Person', new_person_path %>
+
+<br>
+
+<div class="filters" style="border: 1px solid #333; padding: 10px 20px;">
+  <%= form_for :search, url: people_path, remote: true, html: { method: :get } do |f| %>
+    <p>
+      <%= f.label :name %>
+      <%= f.text_field :name %>
+    </p>
+    <p>
+      <%= f.submit "Search" %>
+    </p>
+  <% end %>
+</div>
+
+<div class="people-list-wrap" style="margin-top: 10px; text-align: center;">
+  <%= render 'people' %>
+</div>
+
+<script type="text/javascript">
+  function getParameterByName(url, name) {
+    return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(url)||[,""])[1].replace(/\+/g, '%20'))||null;
+  }
+  var searchCollection = function(e) {
+    var $paginatorLink  = $(e.target),
+        $form           = $('.filters form');
+
+    // Option 1: Add the search parameters query string to the link href
+    // $paginatorLink.attr('href', $paginatorLink.attr('href') + '&' + $form.serialize());
+
+    // Option 2: preventDefault and make AJAX request
+    // e.preventDefault();
+    // $.ajax({
+    //   type: $form.attr('method'),
+    //   url: $form.attr('action'),
+    //   dataType: 'script',
+    //   data: $form.serialize() + '&page=' + getParameterByName($paginatorLink.attr('href'), 'page')
+    // });
+
+    // Option 3: add page parameter to form and submit the form
+    e.preventDefault();
+
+    if ( $form.find('#search_page').length === 0 ) {
+      $form.append('<input id="search_page" name="search[page]" type="hidden">');
+    }
+
+    $form.find('#search_page').val(getParameterByName($paginatorLink.attr('href'), 'page'));
+    $form.submit();
+  };
+
+  $('.people-list-wrap').on('click', '.paginator-wrap a', searchCollection);
+
+</script>
+

@@ -5,3 +5,8 @@
 #
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
+
+names = ["Jose", "Michael", "Claire", "Rory", "Nuno", "Alexandre"]
+(0..5000).each do |i|
+  Person.create! name: "#{names.shuffle.first} #{i}"
+end
